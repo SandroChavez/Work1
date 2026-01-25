@@ -1,22 +1,36 @@
 version: "3.9"
 
 services:
-  mysql-db:
-    image: mysql:8.0
-    container_name: mysql_container
+  postgres-db:
+    image: postgres:16
+    container_name: postgres_container
     restart: always
 
     environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user123
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: mydatabase
 
     ports:
-      - "3306:3306"
+      - "5432:5432"
 
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: nextjs_app
+    ports:
+      - "3000:3000"
+    environment:
+      # NOTA: Usamos 'postgres-db' como host en lugar de localhost
+      DATABASE_URL: "postgresql://postgres:postgres123@postgres-db:5432/mydatabase?schema=public"
+    depends_on:
+      - postgres-db
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/prisma/generated    
 
 volumes:
-  mysql_data:
+  postgres_data:
