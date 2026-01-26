@@ -4,12 +4,13 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 enum Role {
@@ -18,11 +19,53 @@ enum Role {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  password  String    
-  name      String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  emailVerified Boolean   @default(false) // <--- AGREGAR ESTO
+  image         String?                   // <--- RECOMENDADO AGREGAR
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt      // <--- RECOMENDADO AGREGAR
+
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  password              String?   // Aquí se guardará tu password
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
 }
 

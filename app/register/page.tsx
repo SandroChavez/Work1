@@ -7,29 +7,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import Link from "next/link" // Importamos Link para la navegación interna
 
-export default function LoginPage() {
+export default function RegisterPage() {
+  const [name, setName] = useState(""); // Nuevo campo para el nombre
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async(e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await authClient.signIn.email({
+    const { data, error } = await authClient.signUp.email({
       email,
       password,
-    },{
+      name, // Enviamos el nombre a Better Auth
+    }, {
       onSuccess: () => {
-        router.push("/");
+        router.push("/"); // Redirige a la raíz protegida
         router.refresh();
       },
-      onError: (ctxe) => {
-        alert(ctxe.error?.message || "Credenciales Incorrectas");
-        setIsLoading(false); // Importante resetear el loading si hay error
+      onError: (ctx) => {
+        alert(ctx.error?.message || "Error al crear la cuenta");
+        setIsLoading(false);
       }
     });
   }
@@ -38,11 +39,23 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Iniciar sesión</CardTitle>
+          <CardTitle className="text-2xl">Crear cuenta</CardTitle>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
+            {/* Campo de Nombre */}
+            <div className="space-y-2">
+              <Label htmlFor="name">Nombre Completo</Label>
+              <Input 
+                id="name" 
+                type="text" 
+                placeholder="Tu nombre"
+                onChange={(e) => setName(e.target.value)} 
+                required
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
@@ -66,19 +79,18 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Cargando..." : "Entrar"}
+              {isLoading ? "Creando cuenta..." : "Registrarse"}
             </Button>
           </form>
-
-          {/* OPCIÓN PARA IR AL REGISTRO */}
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            ¿No tienes una cuenta?{" "}
-            <Link 
-              href="/register" 
-              className="text-primary underline underline-offset-4 hover:opacity-80 transition-opacity"
+          
+          <div className="mt-4 text-center text-sm">
+            ¿Ya tienes una cuenta?{" "}
+            <button 
+              onClick={() => router.push("/login")} 
+              className="underline underline-offset-4 hover:text-primary"
             >
-              Regístrate aquí
-            </Link>
+              Inicia sesión
+            </button>
           </div>
         </CardContent>
       </Card>

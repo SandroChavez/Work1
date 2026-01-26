@@ -1,20 +1,21 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./prisma"; // <--- Importa tu instancia centralizada
 
-const prisma = new PrismaClient();
-
-export const auth = betterAuth({    
-    database: prismaAdapter(prisma,{
-        provider: "postgresql"
+export const auth = betterAuth({
+    database: prismaAdapter(prisma, {
+        provider: "postgresql",
     }),
-
-    session: {
-        maxAge: 60, 
-        updateAge: 60 
+    emailAndPassword: {
+        enabled: true,
     },
 
-    secret: process.env.AUTH_SECRET
+    session: {
+        expiresIn: 60 * 60, // 30 días en segundos
+    },
+
+    secret: process.env.BETTER_AUTH_SECRET,
+    baseURL: process.env.BETTER_AUTH_URL,
 });
 
 

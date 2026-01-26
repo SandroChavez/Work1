@@ -5,15 +5,12 @@ services:
     image: postgres:16
     container_name: postgres_container
     restart: always
-
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres123
       POSTGRES_DB: mydatabase
-
     ports:
-      - "5432:5432"
-
+      - "5432:5432" # Esto permite que TU PC entre a la DB
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -23,14 +20,16 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # NOTA: Usamos 'postgres-db' como host en lugar de localhost
+      # AQUÍ ESTÁ EL TRUCO: Dentro de Docker, usamos el nombre del servicio
       DATABASE_URL: "postgresql://postgres:postgres123@postgres-db:5432/mydatabase?schema=public"
+      BETTER_AUTH_SECRET: "sanchita123"
+      BETTER_AUTH_URL: "http://localhost:3000"
     depends_on:
       - postgres-db
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/prisma/generated    
+      - /app/node_modules # <--- Este volumen es CLAVE
+      - /app/.next
 
 volumes:
   postgres_data:
