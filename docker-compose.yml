@@ -24,12 +24,13 @@ services:
       DATABASE_URL: "postgresql://postgres:postgres123@postgres-db:5432/mydatabase?schema=public"
       BETTER_AUTH_SECRET: "sanchita123"
       BETTER_AUTH_URL: "http://localhost:3000"
+      CHOKIDAR_USEPOLLING: "true"
+    command: npm run dev
     depends_on:
       - postgres-db
     volumes:
       - .:/app
       - /app/node_modules # <--- Este volumen es CLAVE
-      - /app/.next
 
 volumes:
   postgres_data:
