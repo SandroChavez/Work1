@@ -1,10 +1,14 @@
+'use client';
+
+import { trpc } from '@/trpc/routers/client';
+
 export default function MainPage() {
+  const { data, isLoading } = trpc.hello.useQuery({
+    text: 'sandro',
+  });
 
-    return (
-        <div className="p-4">
-            Main Page - Dashboard
-        </div>
-    )
+  if (isLoading) return <p>Cargando...</p>;
 
+  return <div>{data?.greeting}</div>;
 }
 
