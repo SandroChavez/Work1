@@ -24,7 +24,7 @@ export function AppSideBar() {
   return (
     <Sidebar>
       <SidebarHeader />
-      <SidebarContent>
+      <SidebarContent >
         <SidebarGroup title="Menú">
           <SidebarGroupContent> 
             <SidebarMenu>

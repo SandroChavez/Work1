@@ -2,6 +2,7 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSideBar } from "@/components/SideBarProvider" // Verifica que la ruta de importación sea correcta
+import { NavBarProvider } from "@/components/NavBarProvider";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,8 +11,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <AppSideBar />
         <main className="flex-1">
           {/* El Trigger es el botón para colapsar el menú */}
-          <SidebarTrigger /> 
-          {children}
+            <NavBarProvider/>
+            {children}
         </main>
       </div>
     </SidebarProvider>

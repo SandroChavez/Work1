@@ -51,7 +51,7 @@ export function UserMenu() {
   return (
 
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex flex-row gap-1 p-3">
+      <DropdownMenuTrigger className="flex flex-row gap-2 p-3 bg-gray-200 rounded-2xl ">
         {data.user.image ? (
           <Avatar>
             <AvatarImage src={data.user.image}></AvatarImage>
