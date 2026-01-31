@@ -12,12 +12,14 @@ import {
   SidebarMenuButton
 
 } from "@/components/ui/sidebar"
-import { Home } from "lucide-react"
+import { Home, Bot } from "lucide-react"
 import { UserMenu } from "@/components/DropDownProvider"
 
 
 const Items = [
-  { title: "Inicio", href: "/", icon: Home }
+  { title: "Inicio", href: "/", icon: Home },
+  { title: "Agentes", href: "/agents", icon: Bot }
+
 ]
 
 export function AppSideBar() {
@@ -34,7 +36,7 @@ export function AppSideBar() {
                 >
                   <SidebarMenuButton>
                     <Link href={item.href} className="flex justify-center items-center">
-                      <item.icon className="mr-2 size-3" />
+                      <item.icon className="mr-2 size-4" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>

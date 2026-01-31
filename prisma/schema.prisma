@@ -30,6 +30,7 @@ model User {
 
   sessions      Session[]
   accounts      Account[]
+  agents        Agent[]
 
   @@map("user")
 }
@@ -69,3 +70,11 @@ model Account {
   @@map("account")
 }
 
+model Agent{
+  id                    String    @id @default(cuid())
+  name                  String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime
+  updatedAt             DateTime
+}
