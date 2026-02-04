@@ -36,15 +36,15 @@ model User {
 }
 
 model Session {
-  id        String   @id
+  id        String    @id
   expiresAt DateTime
   token     String
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   ipAddress String?
   userAgent String?
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
 
   @@unique([token])
@@ -64,8 +64,8 @@ model Account {
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
-  createdAt             DateTime
-  updatedAt             DateTime
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   @@map("account")
 }
@@ -73,8 +73,11 @@ model Account {
 model Agent{
   id                    String    @id @default(cuid())
   name                  String
+  instructions          String
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt             DateTime
-  updatedAt             DateTime
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("Agent")
 }
